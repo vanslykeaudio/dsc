@@ -160,7 +160,38 @@ WHERE Members.memid != 0
 ORDER BY member_name;
 
 /* Q12: Find the facilities with their usage by member, but not guests */
-
+SELECT Facilities.name AS facility,
+    Members.surname || ", " || Members.firstname AS member_name,
+    COUNT(Bookings.facid) AS num_of_bookings
+FROM Bookings
+INNER JOIN Facilities   
+    ON Bookings.facid = Facilities.facid
+INNER JOIN Members
+    ON Bookings.memid = Members.memid
+WHERE Members.memid != 0
+GROUP BY facility, member_name;
 
 /* Q13: Find the facilities usage by month, but not guests */
+SELECT Facilities.name AS facility,
+    CASE WHEN strftime("%m", Bookings.starttime) == '01' THEN "JAN"
+        WHEN strftime("%m", Bookings.starttime) == '02' THEN "FEB"
+        WHEN strftime("%m", Bookings.starttime) == '03' THEN "MAR"
+        WHEN strftime("%m", Bookings.starttime) == '04' THEN "APR"
+        WHEN strftime("%m", Bookings.starttime) == '05' THEN "MAY"
+        WHEN strftime("%m", Bookings.starttime) == '06' THEN "JUN"
+        WHEN strftime("%m", Bookings.starttime) == '07' THEN "JUL"
+        WHEN strftime("%m", Bookings.starttime) == '08' THEN "AUG"
+        WHEN strftime("%m", Bookings.starttime) == '09' THEN "SEP"
+        WHEN strftime("%m", Bookings.starttime) == '10' THEN "OCT"
+        WHEN strftime("%m", Bookings.starttime) == '11' THEN "NOV"
+        WHEN strftime("%m", Bookings.starttime) == '12' THEN "DEC"
+        ELSE NULL END AS month,
+    COUNT(Bookings.facid) AS num_of_bookings
+FROM Bookings
+INNER JOIN Facilities   
+    ON Bookings.facid = Facilities.facid
+INNER JOIN Members
+    ON Bookings.memid = Members.memid
+WHERE Members.memid != 0
+GROUP BY month, facility;
 
